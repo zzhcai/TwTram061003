@@ -1,0 +1,20 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+# Show all available Openstack images
+- name: Retrieve all available Openstack images
+  os_image_facts:
+
+- name: Get image names and Ids
+  set_fact:
+    image_facts: "{{ image_facts|default([]) + [ {'name': item.name, 'id': item.id} ] }}"
+  loop: "{{ openstack_image }}"
+  when: item.name is defined
+
+- name: Show images
+  debug:
+    msg: "Image name: {{ item.name }}; Image id: {{ item.id }}"
+  loop: "{{ image_facts }}"

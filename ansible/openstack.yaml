@@ -1,0 +1,15 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Create OpenStack instances on MRC
+  hosts: localhost
+  gather-facts: no
+  vars_files:
+    - vars/openstack.yaml
+  roles:
+    - role: openstack/security-group
+    - role: openstack/volume
+    - role: openstack/instance

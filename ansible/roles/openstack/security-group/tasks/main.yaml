@@ -1,0 +1,41 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Create security groups
+  openstack.cloud.security_group:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    state: present
+  loop: "{{ security_groups }}"
+
+- debug:
+    msg: "Security group(s) {{ security_groups | map(attribute='name') | list }} have been created."
+
+- name: Create egress rule
+  os_security_group_rule:
+    security_group: "default"
+    ethertype: "IPv4"
+    direction: "egress"
+    remote_ip_prefix: "0.0.0.0/0"
+    state: present
+
+- name: Create the first security group rule
+  openstack.cloud.security_group_rule:
+    security_group: "{{ security_groups[0].name }}"
+    protocol: "{{ security_groups[0].rules.protocol }}"
+    port_range_min: "{{ security_groups[0].rules.port_range_min }}"
+    port_range_max: "{{ security_groups[0].rules.port_range_max }}"
+    remote_ip_prefix: "{{ security_groups[0].rules.remote_ip_prefix }}"
+    state: present
+
+- name: Create the second (internal) security group rule
+  openstack.cloud.security_group_rule:
+    security_group: "{{ security_groups[1].name }}"
+    protocol: "{{ security_groups[1].rules.protocol }}"
+    port_range_min: "{{ security_groups[1].rules.port_range_min }}"
+    port_range_max: "{{ security_groups[1].rules.port_range_max }}"
+    remote_group: "{{ security_groups[1].rules.remote_group }}"
+    state: present

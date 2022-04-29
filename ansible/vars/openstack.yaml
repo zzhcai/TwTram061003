@@ -1,0 +1,76 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+availability_zone: melborune_qh2_uom
+# 2 virtual cores, 9 GB memory
+flavor: uom.mse.2c9g
+# NeCTAR Ubuntu 20.04 LTS (Focal) amd64 [v3]
+image: f3200167-dcd9-4a00-a99a-d2e8e57246d1
+# qh2-uom-internal
+network: f0c86d08-d45b-45c4-9216-b8abd6bc133c
+
+volumes:
+  - vol_name: db
+    vol_size: 70
+  - vol_name: harvestor1
+    vol_size: 70
+  - vol_name: harvestor2
+    vol_size: 70
+  - vol_name: webapp
+    vol_size: 40
+
+security_groups:
+  - name: client
+    description: "Security group for management and client access"
+    rules:
+      # SSH
+      - protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+      # HTTP
+      - protocol: tcp
+        port_range_min: 80
+        port_range_max: 80
+        remote_ip_prefix: 0.0.0.0/0
+      # HTTPS
+      - protocol: tcp
+        port_range_min: 443
+        port_range_max: 443
+        remote_ip_prefix: 0.0.0.0/0
+      # Standard clustered port for all HTTP API requests
+      - protocol: tcp
+        port_range_min: 5984
+        port_range_max: 5984
+        remote_ip_prefix: 0.0.0.0/0
+  - name: intra_cluster
+    description: "Security group for communication between nodes of the CouchDB cluster"
+    rules:
+      # Standard clustered port for all HTTP API requests
+      - protocol: tcp
+        port_range_min: 5984
+        port_range_max: 5984
+        remote_group: intra_cluster
+      # Erlang port mapper daemon (epmd)
+      - protocol: tcp
+        port_range_min: 4369
+        port_range_max: 4369
+        remote_group: intra_cluster
+      # Used for communication with other CouchDB nodes in the cluster
+      - protocol: tcp
+        port_range_min: 9100
+        port_range_max: 9102
+        remote_group: intra_cluster
+
+instances:
+  - name: db
+    volumes: ["db"]
+  - name: harvestor1
+    volumes: ["harvestor1"]
+  - name: harvestor2
+    volumes: ["harvestor2"]
+  - name: webapp
+    volumes: ["webapp"]

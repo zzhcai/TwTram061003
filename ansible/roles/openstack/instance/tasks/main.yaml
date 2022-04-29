@@ -1,0 +1,57 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Create Instance on MRC
+  openstack.cloud.server:
+    name: "{{ item.name }}"
+    image: "{{ image }}"
+    key_name: "{{ key_name }}"
+    flavor: "{{ flavor }}"
+    availability_zone: "{{ availability_zone }}"
+    security_groups: "{{ security_groups | map(attribute='name') | list }}"
+    volumes: "{{ item.volumes }}"
+    network: "{{ network }}"
+    auto_floating_ip: yes
+    wait: yes
+    timeout: 600
+    state: present
+  loop: "{{ instances }}"
+  register: os_instance_async
+  async: 600
+  poll: 0
+
+- name: Check on async tasks
+  no_log: yes
+  async_status:
+    jid: "{{ os_instance_async.ansible_job_id }}"
+  loop: "{{ os_instance_async.results }}"
+  register: os_instance
+  until: os_instance.finished
+  retries: 60
+  delay: 10
+
+- name: Wait for connection
+  no_log: yes
+  wait_for:
+    host: "{{ item.openstack.public_v4 }}"
+    port: 22
+    timeout: 120
+    search_regex: OpenSSH
+  loop: "{{ os_instance.results }}"
+  when: item.openstack is defined
+
+- name: Print the IP address for each instance
+  debug:
+    msg: "Instance on {{ item.openstack.public_v4 }} has been created."
+  loop: "{{ os_instance.results }}"
+  when: item.openstack is defined
+
+- name: Add host to in-memory inventory
+  add_host:
+    name: "{{ item.openstack.public_v4 }}"
+    groups: mrc
+  loop: "{{ os_instance.results | sortbysubkey('name') }}"
+  when: item.openstack is defined
