@@ -6,10 +6,11 @@
 
 - name: Create OpenStack instances on MRC
   hosts: localhost
-  gather-facts: no
+  gather_facts: true
   vars_files:
     - vars/openstack.yaml
   roles:
+    - role: openstack/common
     - role: openstack/security-group
     - role: openstack/volume
     - role: openstack/instance

@@ -25,17 +25,19 @@
 - name: Create the first security group rule
   openstack.cloud.security_group_rule:
     security_group: "{{ security_groups[0].name }}"
-    protocol: "{{ security_groups[0].rules.protocol }}"
-    port_range_min: "{{ security_groups[0].rules.port_range_min }}"
-    port_range_max: "{{ security_groups[0].rules.port_range_max }}"
-    remote_ip_prefix: "{{ security_groups[0].rules.remote_ip_prefix }}"
+    protocol: "{{ item.protocol }}"
+    port_range_min: "{{ item.port_range_min }}"
+    port_range_max: "{{ item.port_range_max }}"
+    remote_ip_prefix: "{{ item.remote_ip_prefix }}"
     state: present
+  loop: "{{ security_groups[0].rules }}"
 
 - name: Create the second (internal) security group rule
   openstack.cloud.security_group_rule:
     security_group: "{{ security_groups[1].name }}"
-    protocol: "{{ security_groups[1].rules.protocol }}"
-    port_range_min: "{{ security_groups[1].rules.port_range_min }}"
-    port_range_max: "{{ security_groups[1].rules.port_range_max }}"
-    remote_group: "{{ security_groups[1].rules.remote_group }}"
+    protocol: "{{ item.protocol }}"
+    port_range_min: "{{ item.port_range_min }}"
+    port_range_max: "{{ item.port_range_max }}"
+    remote_group: "{{ item.remote_group }}"
     state: present
+  loop: "{{ security_groups[1].rules }}"
