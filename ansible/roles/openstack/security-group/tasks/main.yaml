@@ -14,14 +14,6 @@
 - debug:
     msg: "Security group(s) {{ security_groups | map(attribute='name') | list }} have been created."
 
-- name: Create egress rule
-  os_security_group_rule:
-    security_group: "default"
-    ethertype: "IPv4"
-    direction: "egress"
-    remote_ip_prefix: "0.0.0.0/0"
-    state: present
-
 - name: Create the first security group rule
   openstack.cloud.security_group_rule:
     security_group: "{{ security_groups[0].name }}"
