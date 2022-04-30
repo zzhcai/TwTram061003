@@ -9,6 +9,7 @@
     name: "{{ item.name }}"
     image: "{{ image }}"
     flavor: "{{ flavor }}"
+    key_name: "{{ instance_key_name }}"
     availability_zone: "{{ availability_zone }}"
     security_groups: "{{ security_groups | map(attribute='name') | list }}"
     volumes: "{{ item.volumes }}"

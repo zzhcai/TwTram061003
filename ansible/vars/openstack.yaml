@@ -12,6 +12,9 @@ image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999
 # qh2-uom-internal
 network: f0c86d08-d45b-45c4-9216-b8abd6bc133c
 
+# key pair name
+instance_key_name: cloud
+
 volumes:
   - vol_name: db
     vol_size: 70

@@ -11,6 +11,7 @@
     - vars/openstack.yaml
   roles:
     - role: openstack/common
+    - role: openstack/key
     - role: openstack/security-group
     - role: openstack/volume
     - role: openstack/instance
