@@ -23,7 +23,6 @@
   poll: 0
 
 - name: Check on async tasks
-  no_log: yes
   async_status:
     jid: "{{ item.ansible_job_id }}"
   loop: "{{ os_instance_async.results }}"
@@ -41,12 +40,16 @@
   loop: "{{ os_instance.results }}"
   when: item.openstack is defined
 
-- debug:
-    msg: Instance {{ item.name }} on {{ item.openstack.public_v4 }} has been created.
-  loop: "{{ os_instance.results | sortbysubkey('name') }}"
-
 - name: Add host to in-memory inventory
+  no_log: yes
   add_host:
     name: "{{ item.openstack.public_v4 }}"
     groups: mrc
-  loop: "{{ os_instance.results | sortbysubkey('name') }}"
+  loop: "{{ os_instance.results | sort(attribute='openstack.name') }}"
+
+- name: Keep IP addresses in setup vars
+  lineinfile:
+    path: vars/setup.yaml
+    line: "{{ item.0 }}: {{ item.1 }}"
+    create: yes
+  loop: "{{ instances | map(attribute='name') | zip(groups['mrc']) | list }}"
