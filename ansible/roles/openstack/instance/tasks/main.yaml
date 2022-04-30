@@ -8,7 +8,6 @@
   openstack.cloud.server:
     name: "{{ item.name }}"
     image: "{{ image }}"
-    key_name: "{{ key_name }}"
     flavor: "{{ flavor }}"
     availability_zone: "{{ availability_zone }}"
     security_groups: "{{ security_groups | map(attribute='name') | list }}"
@@ -26,7 +25,7 @@
 - name: Check on async tasks
   no_log: yes
   async_status:
-    jid: "{{ os_instance_async.ansible_job_id }}"
+    jid: "{{ item.ansible_job_id }}"
   loop: "{{ os_instance_async.results }}"
   register: os_instance
   until: os_instance.finished
@@ -34,7 +33,6 @@
   delay: 10
 
 - name: Wait for connection
-  no_log: yes
   wait_for:
     host: "{{ item.openstack.public_v4 }}"
     port: 22
@@ -43,15 +41,12 @@
   loop: "{{ os_instance.results }}"
   when: item.openstack is defined
 
-- name: Print the IP address for each instance
-  debug:
-    msg: "Instance on {{ item.openstack.public_v4 }} has been created."
-  loop: "{{ os_instance.results }}"
-  when: item.openstack is defined
+- debug:
+    msg: Instance {{ item.name }} on {{ item.openstack.public_v4 }} has been created.
+  loop: "{{ os_instance.results | sortbysubkey('name') }}"
 
 - name: Add host to in-memory inventory
   add_host:
     name: "{{ item.openstack.public_v4 }}"
     groups: mrc
   loop: "{{ os_instance.results | sortbysubkey('name') }}"
-  when: item.openstack is defined

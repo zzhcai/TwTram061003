@@ -12,7 +12,7 @@
   loop: "{{ security_groups }}"
 
 - debug:
-    msg: "Security group(s) {{ security_groups | map(attribute='name') | list }} have been created."
+    msg: "Security groups {{ security_groups | map(attribute='name') | list }} have been created."
 
 - name: Create the first security group rule
   openstack.cloud.security_group_rule:

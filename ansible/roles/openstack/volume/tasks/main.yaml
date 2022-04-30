@@ -15,5 +15,5 @@
   loop: "{{ volumes }}"
   register: os_vol
 
-- ansible.builtin.debug:
-    msg: "Volume {{ os_vol.results | map(attribute='id') | list }} has been created."
+- debug:
+    msg: "Volumes {{ os_vol.results | map(attribute='id') | list }} have been created."
