@@ -1,0 +1,48 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Install dependencies
+  become: yes
+  apt:
+    name:
+      [
+        "apt-transport-https",
+        "ca-certificates",
+        "curl",
+        "python-setuptools",
+        "software-properties-common",
+      ]
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: Add Docker apt repository key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker apt repository and update apt cache
+  become: yes
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    mode: "644"
+    update_cache: yes
+    state: present
+
+- name: Install docker
+  become: yes
+  apt:
+    name: ["docker-ce", "docker-ce-cli", "containerd.io"]
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: Install docker-compose
+  become: yes
+  pip:
+    name: ["docker-compose"]
+    state: latest

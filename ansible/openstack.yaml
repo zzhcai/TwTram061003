@@ -15,3 +15,9 @@
     - role: openstack/security-group
     - role: openstack/volume
     - role: openstack/instance
+
+- hosts: mrc
+  gather_facts: true
+  roles:
+    - role: setup/mount-volume
+    - role: setup/docker
