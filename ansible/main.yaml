@@ -10,10 +10,10 @@
   vars_files:
     - vars/openstack.yaml
   roles:
-  #   - role: openstack/common
-  #   - role: openstack/key
-  #   - role: openstack/security-group
-  #   - role: openstack/volume
+    - role: openstack/common
+    - role: openstack/key
+    - role: openstack/security-group
+    - role: openstack/volume
     - role: openstack/instance
 
 - hosts: mrc
@@ -22,7 +22,7 @@
     - role: setup/mount-volume
     - role: setup/docker
 
-- name: Setting up CouchDB for harvester one 
+- name: Setting up CouchDB for harvester one
   vars_files:
     - vars/setup.yaml
   become: yes
