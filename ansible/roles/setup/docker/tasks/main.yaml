@@ -12,8 +12,10 @@
         "apt-transport-https",
         "ca-certificates",
         "curl",
-        "python-setuptools",
         "software-properties-common",
+        'python3-dev', 
+        'python3-pip', 
+        'python3-setuptools'
       ]
     state: latest
     install_recommends: no

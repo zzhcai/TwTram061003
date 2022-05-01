@@ -30,7 +30,7 @@
     path: /data
     recurse: yes
     state: directory
-  when: directory_stats.results.stat.exists == false
+  when: directory_stats.stat.exists == false
 
 - name: Mount device
   become: yes
@@ -41,6 +41,7 @@
     state: mounted
 
 - name: Reboot
+  become: yes
   lineinfile:
     path: /etc/fstab
     line: "/dev/vdb /data auto defaults 0 0"
