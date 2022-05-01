@@ -18,9 +18,9 @@ instance_key_name: cloud
 volumes:
   - vol_name: db
     vol_size: 70
-  - vol_name: harvestor1
+  - vol_name: harvester1
     vol_size: 70
-  - vol_name: harvestor2
+  - vol_name: harvester2
     vol_size: 70
   - vol_name: webapp
     vol_size: 40
@@ -71,9 +71,9 @@ security_groups:
 instances:
   - name: db
     volumes: ["db"]
-  - name: harvestor1
-    volumes: ["harvestor1"]
-  - name: harvestor2
-    volumes: ["harvestor2"]
+  - name: harvester1
+    volumes: ["harvester1"]
+  - name: harvester2
+    volumes: ["harvester2"]
   - name: webapp
     volumes: ["webapp"]

@@ -1,0 +1,68 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Create directory for couch
+  become: yes
+  file:
+    path: /data/couch
+    recurse: yes
+    state: directory
+    mode: '755'
+
+- name: Upload docker compose file
+  become: yes
+  template:
+    src: docker-compose.yaml.j2
+    dest: /data/couch/docker-compose.yaml
+
+- name: run docker-compose
+  become: true
+  community.docker.docker_compose:
+    project_src: /data/couch
+    pull: yes
+    state: present
+    remove_orphans: yes
+
+# - name:
+#   debug:
+#     msg: node is {{ node }}, and mrc_0 is {{ db }}
+
+# - name:
+#   debug:
+#     msg: slave is {{ item }}
+#   loop: "{{ groups['mrc'][1:3] }}"
+
+# Set up cluster   
+- become: yes
+  lineinfile:
+    path: /data/couch/cluster_setup.sh
+    regexp: '.*'
+    line: 'curl -X POST -H "Content-Type: application/json" http://admin:password@127.0.0.1:5984/_cluster_setup -d ''{"action": "enable_cluster", "bind_address": "0.0.0.0", "username": "admin", "password": "admin", "node_count": "3"}'''
+    create: yes
+
+- become: yes
+  lineinfile:
+    path: /data/couch/cluster_setup.sh
+    line: 'curl -X POST -H "Content-Type: application/json" http://admin:password@127.0.0.1:5984/_cluster_setup -d ''{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"admin", "port": 5984, "node_count": "3", "remote_node": "{{ item }}", "remote_current_user": "admin", "remote_current_password": "admin" }'''
+  loop: "{{ groups['mrc'][1:3] }}"
+  when: "'{{ node }}' == '{{ db }}'" 
+
+- become: yes
+  lineinfile:
+    path: /data/couch/cluster_setup.sh
+    line: 'curl -X POST -H "Content-Type: application/json" http://admin:password@127.0.0.1:5984/_cluster_setup -d ''{"action": "add_node", "host":"{{ item }}", "port": 5984, "username": "admin", "password":"admin"}'''
+  loop: "{{ groups['mrc'][1:3] }}"
+  when: "'{{ node }}' == '{{ db }}'" 
+
+- become: yes
+  lineinfile:
+    path: /data/couch/cluster_setup.sh
+    line: 'curl -X POST -H "Content-Type: application/json" http://admin:password@127.0.0.1:5984/_cluster_setup -d ''{"action": "finish_cluster"}'''
+  when: node == "{{ db }}"
+
+- name: execute the sh file
+  shell: /data/couch/cluster_setup.sh
+

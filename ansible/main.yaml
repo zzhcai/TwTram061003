@@ -1,0 +1,56 @@
+---
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+- name: Create OpenStack instances on MRC
+  hosts: localhost
+  gather_facts: true
+  vars_files:
+    - vars/openstack.yaml
+  roles:
+  #   - role: openstack/common
+  #   - role: openstack/key
+  #   - role: openstack/security-group
+  #   - role: openstack/volume
+    - role: openstack/instance
+
+- hosts: mrc
+  gather_facts: true
+  roles:
+    - role: setup/mount-volume
+    - role: setup/docker
+
+- name: Setting up CouchDB for harvester one 
+  vars_files:
+    - vars/setup.yaml
+  become: yes
+  hosts: mrc[1]
+  gather_facts: no
+  vars:
+    - node: "{{ groups['mrc'][1] }}"
+  roles:
+    - role: setup/couch
+
+- name: Setting up CouchDB for harvester two
+  become: yes
+  vars_files:
+    - vars/setup.yaml
+  hosts: mrc[2]
+  gather_facts: no
+  vars:
+    - node: "{{ groups['mrc'][2] }}"
+  roles:
+    - role: setup/couch
+
+- name: Setting up CouchDB for coordination node
+  become: yes
+  vars_files:
+    - vars/setup.yaml
+  hosts: mrc[0]
+  gather_facts: no
+  vars:
+    - node: "{{ groups['mrc'][0] }}"
+  roles:
+    - role: setup/couch

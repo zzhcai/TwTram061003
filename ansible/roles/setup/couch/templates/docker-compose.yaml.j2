@@ -1,0 +1,21 @@
+# @author Team 31, Melborune, 2022
+#
+# Bingzhe Jin (1080774), Hongwei Chen (891632), Tian Hui (1054513),
+# Zhen Cai (1049487), Ziqi Zhang (1241157)
+
+version: "3"
+services:
+  couchDB:
+    image: couchdb:3.2.2
+    restart: always
+    ports:
+      - "5984:5984"
+      - "4369:4369"
+      - "9100-9102:9100-9102"
+    volumes:
+      - /data/couch/data:/opt/couchdb/data
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=admin
+      - NODENAME={{ node }}
+    container_name: couch
