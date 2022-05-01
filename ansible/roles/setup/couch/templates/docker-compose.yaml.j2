@@ -17,5 +17,7 @@ services:
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
-      - NODENAME={{ node }}
+      - COUCHDB_SECRET=aiB8ooj9cheikie
+      - NODENAME="{{ node }}"
+    command: "-setcookie zaafaeKe7gaNal6"
     container_name: couch
