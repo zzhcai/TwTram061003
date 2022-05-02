@@ -44,5 +44,6 @@
   become: yes
   lineinfile:
     path: /etc/fstab
+    regexp: ".*"
     line: "/dev/vdb /data auto defaults 0 0"
     create: yes

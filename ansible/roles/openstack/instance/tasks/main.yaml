@@ -49,10 +49,10 @@
     groups: mrc
   loop: "{{ os_instance.results | sort(attribute='openstack.name') }}"
 
-- shell: rm vars/setup.yaml
 - name: Keep IP addresses in setup vars
   lineinfile:
     path: vars/setup.yaml
+    regexp: ".*"
     line: "{{ item.0 }}: {{ item.1 }}"
     create: yes
   loop: "{{ instances | map(attribute='name') | zip(groups['mrc']) | list }}"
