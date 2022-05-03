@@ -21,6 +21,7 @@
   roles:
     - role: setup/mount-volume
     - role: setup/docker
+    - role: setup/git
 
 - name: Setting up CouchDB for harvester one
   vars_files:
