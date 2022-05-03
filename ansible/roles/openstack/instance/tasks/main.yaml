@@ -11,7 +11,7 @@
     flavor: "{{ flavor }}"
     key_name: "{{ instance_key_name }}"
     availability_zone: "{{ availability_zone }}"
-    security_groups: "{{ security_groups | map(attribute='name') | list }}"
+    security_groups: "{{ (item.name == 'webapp') | ternary(security_groups, security_groups[1:]) | map(attribute='name') | list }}"
     volumes: "{{ item.volumes }}"
     network: "{{ network }}"
     auto_floating_ip: yes

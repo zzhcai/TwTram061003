@@ -27,13 +27,8 @@ volumes:
 
 security_groups:
   - name: client
-    description: "Security group for management and client access"
+    description: "Security group for http(s)"
     rules:
-      # SSH
-      - protocol: tcp
-        port_range_min: 22
-        port_range_max: 22
-        remote_ip_prefix: 0.0.0.0/0
       # HTTP
       - protocol: tcp
         port_range_min: 80
@@ -44,10 +39,13 @@ security_groups:
         port_range_min: 443
         port_range_max: 443
         remote_ip_prefix: 0.0.0.0/0
-      # Standard clustered port for all HTTP API requests
+  - name: management
+    description: "Security group for ssh"
+    rules:
+      # SSH
       - protocol: tcp
-        port_range_min: 5984
-        port_range_max: 5984
+        port_range_min: 22
+        port_range_max: 22
         remote_ip_prefix: 0.0.0.0/0
   - name: intra_cluster
     description: "Security group for communication between nodes of the CouchDB cluster"

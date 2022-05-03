@@ -14,22 +14,22 @@
 - debug:
     msg: "Security groups {{ security_groups | map(attribute='name') | list }} have been created."
 
-- name: Create the first security group rule
+- name: Create the first two security group rules
   openstack.cloud.security_group_rule:
-    security_group: "{{ security_groups[0].name }}"
-    protocol: "{{ item.protocol }}"
-    port_range_min: "{{ item.port_range_min }}"
-    port_range_max: "{{ item.port_range_max }}"
-    remote_ip_prefix: "{{ item.remote_ip_prefix }}"
+    security_group: "{{ item.name }}"
+    protocol: "{{ item.rules.protocol }}"
+    port_range_min: "{{ item.rules.port_range_min }}"
+    port_range_max: "{{ item.rules.port_range_max }}"
+    remote_ip_prefix: "{{ item.rules.remote_ip_prefix }}"
     state: present
-  loop: "{{ security_groups[0].rules }}"
+  loop: "{{ security_groups[:2] }}"
 
-- name: Create the second (internal) security group rule
+- name: Create the third (internal) security group rule
   openstack.cloud.security_group_rule:
-    security_group: "{{ security_groups[1].name }}"
+    security_group: "{{ security_groups[2].name }}"
     protocol: "{{ item.protocol }}"
     port_range_min: "{{ item.port_range_min }}"
     port_range_max: "{{ item.port_range_max }}"
     remote_group: "{{ item.remote_group }}"
     state: present
-  loop: "{{ security_groups[1].rules }}"
+  loop: "{{ security_groups[2].rules }}"
