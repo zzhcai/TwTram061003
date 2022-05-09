@@ -4,6 +4,7 @@
 from senticnet.senticnet import SenticNet
 from cleantext import clean
 from optparse import OptionParser
+import couchdb
 
 def clean_text(text):
     return clean(text, fix_unicode=True, to_ascii=True, lower=True,
@@ -91,7 +92,39 @@ def readCommand(argv):
     return options
 
 
+def save_tweet(db, tweet):
+    sentiment = methods.score_sentence(tweet.text)
+    
+    item = {
+            '_id': tweet.id,
+            'text': tweet.text,
+            'author': tweet.author_id,
+            'geo': tweet.geo,
+            'polarity_score': sentiment['polarity_score'],
+            'introspection_score': sentiment['introspection_score'],
+            'temper_score': sentiment['temper_score'],
+            'attitude_score': sentiment['attitude_score'],
+            'sensitivity_score': sentiment['sensitivity_score']
+            }
+    try:
+        db.save(item)
+        print("saved twitter", tweet.id)
+    except:
+        pass
 
+def save_user(user_db, user):
+    
+    item = {
+            '_id': user.id,
+            'name': user.name,
+            'username': user.username,
+            'location': user.location
+            }
+    try:
+        user_db.save(item)
+        print("saved user", user.id)
+    except:
+        pass
 
 
 
