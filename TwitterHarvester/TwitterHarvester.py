@@ -34,6 +34,12 @@ class TwitterStreaming(tweepy.StreamingClient):
 if __name__ == '__main__':
     options = methods.readCommand(sys.argv[1:])
 
+    # settings for CouchDB
+    SERVER = 'http://admin:admin@localhost:5984'
+
+    # connecting CouchDB server
+    server = couchdb.Server(SERVER)
+
     # connect to or create a database
     try:
         db = server[options.database]

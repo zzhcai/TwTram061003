@@ -1,5 +1,11 @@
 #pip install senticnet
 #pip install clean-text
+#pip install Unidecode
+#pip install tweepy
+#pip install couchdb
+
+#http://sentic.net/api/#intensity
+#EMOTION RECOGNITION
 
 from senticnet.senticnet import SenticNet
 from cleantext import clean
@@ -93,12 +99,13 @@ def readCommand(argv):
 
 
 def save_tweet(db, tweet):
-    sentiment = methods.score_sentence(tweet.text)
+    sentiment = score_sentence(tweet.text)
     
     item = {
-            '_id': tweet.id,
+            '_id': str(tweet.id),
             'text': tweet.text,
             'author': tweet.author_id,
+            'created_at': tweet.created_at.isoformat(), 
             'geo': tweet.geo,
             'polarity_score': sentiment['polarity_score'],
             'introspection_score': sentiment['introspection_score'],
@@ -108,21 +115,21 @@ def save_tweet(db, tweet):
             }
     try:
         db.save(item)
-        print("saved twitter", tweet.id)
+        #print("saved twitter", tweet.id)
     except:
         pass
 
 def save_user(user_db, user):
     
     item = {
-            '_id': user.id,
+            '_id': str(user.id),
             'name': user.name,
             'username': user.username,
             'location': user.location
             }
     try:
         user_db.save(item)
-        print("saved user", user.id)
+        #print("saved user", user.id)
     except:
         pass
 

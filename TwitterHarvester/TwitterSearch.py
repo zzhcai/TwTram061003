@@ -6,7 +6,7 @@ import tweepy
 import methods
 
 MAX_RESULT = 10 #number of search tweets per page
-PAGE_LIMIT = 5 #number of pages
+PAGE_LIMIT = 1 #number of pages
 
 
 CONSUMER_KEY = 'l1m1kwTc68Dguv9yKmFpaxTsR'
@@ -49,6 +49,12 @@ def search(query):
 
 if __name__ == '__main__':
     options = methods.readCommand(sys.argv[1:])
+
+    # settings for CouchDB
+    SERVER = 'http://admin:admin@localhost:5984'
+
+    # connecting CouchDB server
+    server = couchdb.Server(SERVER)
 
     # connect to or create a database
     try:
