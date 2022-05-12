@@ -81,7 +81,8 @@ with open(filename, "r") as f:
         }
         
         keywords = ["myki", "tram", "train", "bus", "metro"]
-        if item[sa4] != None and any(re.search(k, item[text], re.IGNORECASE) for k in keywords):
+
+        if item[sa4] != None and any(re.search(k, item["text"], re.IGNORECASE) for k in keywords):
             try:
                 db.save(item)
                 # print("saved twitter", tweet["id"])
