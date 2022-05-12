@@ -33,7 +33,7 @@ sa4 = (
     .drop("index", axis=1)
     .rename(columns={"SA4_NAME21": "name"})
 )
-with open("../sa4.json", "w") as f:
+with open("../webapp/public/jsons/sa4.json", "w") as f:
     f.write(sa4.to_json())
 
 # SA3
@@ -44,7 +44,7 @@ sa3 = (
     .drop("index", axis=1)
     .rename(columns={"SA3_NAME21": "name"})
 )
-with open("../sa3.json", "w") as f:
+with open("../webapp/public/jsons/sa3.json", "w") as f:
     f.write(sa3.to_json())
 
 # SA2
@@ -55,7 +55,7 @@ sa2 = (
     .drop("index", axis=1)
     .rename(columns={"SA2_NAME21": "name"})
 )
-with open("../sa2.json", "w") as f:
+with open("../webapp/public/jsons/sa2.json", "w") as f:
     f.write(sa2.to_json())
 
 with open(filename, "r") as f:
