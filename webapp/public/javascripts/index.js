@@ -7,7 +7,7 @@ function initMap() {
 		center: unimelb,
 	});
 	window.map = map; //temp
-	map.data.loadGeoJson('/jsons/sa3.json');
+	map.data.loadGeoJson(geoJSON);
 	map.data.setStyle(function (feature) {
 		return {
 			fillColor: 'blue',
@@ -15,8 +15,12 @@ function initMap() {
 		}
 	});
 	map.data.addListener('mouseover', function (event) {
-		setText(event.feature.j.SA3_NAME21);
+		setText(getName(event.feature));
 	});
+}
+
+function getName(feature) {
+	return feature.j.name;
 }
 
 function setText(text) {
