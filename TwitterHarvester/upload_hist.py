@@ -86,9 +86,9 @@ with open(filename, "r") as f:
             "sensitivity_score": sentiment["sensitivity_score"]
         }
 
-        keywords = ["myki", "tram", "train", "bus", "metro", "trams", "trains", "buses"]
-        print(item["sa4"])
-        if item["sa4"] != None and any(re.search(k, item["text"], re.IGNORECASE) for k in keywords):
+        keywords = ["myki", "tram", "trams"]
+
+        if item["sa4"] != None and any(re.search('(\W|^)'+k+'(\W|$)', item["text"], re.IGNORECASE) for k in keywords):
             try:
                 db.save(item)
                 # print("saved twitter", tweet["id"])
