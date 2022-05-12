@@ -5,7 +5,7 @@ from datetime import datetime
 import geopandas as gpd
 from methods import locate, score_sentence
 
-filename = "./twitter-melb.json"
+filename = "/home/ubuntu/twitter-melb.json"
 
 # get couchDB IP address
 var_filename = "../ansible/vars/setup.yaml"
@@ -85,10 +85,10 @@ with open(filename, "r") as f:
             "attitude_score": sentiment["attitude_score"],
             "sensitivity_score": sentiment["sensitivity_score"]
         }
-        
-        keywords = ["myki", "tram", "train", "bus", "metro"]
 
-        if item[sa4] != None and any(re.search(k, item["text"], re.IGNORECASE) for k in keywords):
+        keywords = ["myki", "tram", "train", "bus", "metro"]
+        print(item["sa4"])
+        if item["sa4"] != None and any(re.search(k, item["text"], re.IGNORECASE) for k in keywords):
             try:
                 db.save(item)
                 # print("saved twitter", tweet["id"])
