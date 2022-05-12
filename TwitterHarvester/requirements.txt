@@ -1,0 +1,6 @@
+senticnet==1.6
+clean-text==0.6.0
+Unidecode==1.3.4
+tweepy==4.9.0
+couchdb==1.2
+geopandas==0.10.2

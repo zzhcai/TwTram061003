@@ -4,6 +4,7 @@
 from senticnet.senticnet import SenticNet
 from cleantext import clean
 from optparse import OptionParser
+from shapely.geometry import Point
 
 
 def clean_text(text):
@@ -147,3 +148,9 @@ def save_user(user_db, user):
         # print("saved user", user.id)
     except:
         pass
+
+def locate(geo, sa):
+    for g in sa:
+        if g["geometry"].contains(Point(geo[0], geo[1])):
+            return g["name"]
+    return None

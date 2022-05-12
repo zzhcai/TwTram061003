@@ -55,9 +55,3 @@
     - node: "{{ groups['mrc'][0] }}"
   roles:
     - role: setup/couch
-
-- name: Run harvester
-  hosts: mrc[1:3]
-  gather_facts: no
-  roles:
-    - role: run/harvester
