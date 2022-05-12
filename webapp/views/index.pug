@@ -5,6 +5,6 @@ block head
 
 block content
   h1= title
-  p Welcome to #{title}
+  p(id="textField")
   div(id="map" style="height:400px; width:100%")
   script(defer src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap&v=weekly")
