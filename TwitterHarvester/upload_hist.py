@@ -86,7 +86,7 @@ with open(filename, "r") as f:
             "sensitivity_score": sentiment["sensitivity_score"]
         }
 
-        keywords = ["myki", "tram", "train", "bus", "metro"]
+        keywords = ["myki", "tram", "train", "bus", "metro", "trams", "trains", "buses"]
         print(item["sa4"])
         if item["sa4"] != None and any(re.search(k, item["text"], re.IGNORECASE) for k in keywords):
             try:

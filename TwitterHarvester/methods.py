@@ -151,6 +151,6 @@ def save_user(user_db, user):
 
 def locate(geo, sa):
     for _, g in sa.iterrows():
-        if g[1].contains(Point(geo['coordinates'][0], geo['coordinates'][1])):
+        if g[1].contains(Point(geo['coordinates'][1], geo['coordinates'][0])):
             return g["name"]
     return None
