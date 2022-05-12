@@ -4,7 +4,7 @@ import tweepy
 import methods
 
 MAX_RESULT = 10  # number of search tweets per page
-PAGE_LIMIT = 1  # number of pages
+PAGE_LIMIT = float("inf")  # number of pages
 
 
 CONSUMER_KEY = "l1m1kwTc68Dguv9yKmFpaxTsR"
