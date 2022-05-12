@@ -7,8 +7,14 @@ from methods import locate, score_sentence
 
 filename = "./twitter-melb.json"
 
+# get couchDB IP address
+var_filename = "../ansible/vars/setup.yaml"
+with open(var_filename, 'r') as f:
+    first_line = f.readline().strip()
+    db_ip = first_line.split()[1]
+
 # settings for CouchDB
-SERVER = "http://admin:admin@localhost:5984"
+SERVER = "http://admin:admin@" + db_ip + ":5984"
 
 # connecting CouchDB server
 server = couchdb.Server(SERVER)
