@@ -63,34 +63,38 @@ with open(filename, "r") as f:
     for line in f:
         content = line.strip().strip(",")
         tweet = json.loads(content)
-        datetime_object = datetime.strptime(
-            tweet["doc"]["created_at"], "%a %b %d %X %z %Y"
-        )
-        geo = tweet["doc"]["geo"]
-        sentiment = score_sentence(tweet["doc"]["text"])
 
-        item = {
-            "_id": tweet["id"],
-            "text": tweet["doc"]["text"],
-            "author": tweet["doc"]["user"]["id"],
-            "created_at": datetime_object.isoformat(),
-            "geo": geo,
-            "sa4": locate(geo, sa4),
-            "sa3": locate(geo, sa3),
-            "sa2": locate(geo, sa2),
-            "location": tweet["doc"]["location"],
-            "polarity_score": sentiment["polarity_score"],
-            "introspection_score": sentiment["introspection_score"],
-            "temper_score": sentiment["temper_score"],
-            "attitude_score": sentiment["attitude_score"],
-            "sensitivity_score": sentiment["sensitivity_score"]
-        }
+        if (tweet["doc"]["lang"] == "en" && \
+            tweet["doc"]["retweeted"] == False):
 
-        keywords = ["myki", "tram", "trams"]
+            datetime_object = datetime.strptime(
+                tweet["doc"]["created_at"], "%a %b %d %X %z %Y"
+            )
+            geo = tweet["doc"]["geo"]
+            sentiment = score_sentence(tweet["doc"]["text"])
 
-        if item["sa4"] != None and any(re.search('(\W|^)'+k+'(\W|$)', item["text"], re.IGNORECASE) for k in keywords):
-            try:
-                db.save(item)
-                # print("saved twitter", tweet["id"])
-            except:
-                print("failed save")
+            item = {
+                "_id": tweet["id"],
+                "text": tweet["doc"]["text"],
+                "author": tweet["doc"]["user"]["id"],
+                "created_at": datetime_object.isoformat(),
+                "geo": geo,
+                "sa4": locate(geo, sa4),
+                "sa3": locate(geo, sa3),
+                "sa2": locate(geo, sa2),
+                "location": tweet["doc"]["location"],
+                "polarity_score": sentiment["polarity_score"],
+                "introspection_score": sentiment["introspection_score"],
+                "temper_score": sentiment["temper_score"],
+                "attitude_score": sentiment["attitude_score"],
+                "sensitivity_score": sentiment["sensitivity_score"]
+            }
+
+            keywords = ["myki", "tram", "trams"]
+
+            if item["sa4"] != None and any(re.search('(\W|^)'+k+'(\W|$)', item["text"], re.IGNORECASE) for k in keywords):
+                try:
+                    db.save(item)
+                    # print("saved twitter", tweet["id"])
+                except:
+                    print("failed save")
