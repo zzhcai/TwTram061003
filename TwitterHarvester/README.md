@@ -7,3 +7,32 @@
   - Statistical Areas Level 4 - 2021 - Shapefile (28.45 MB)
 
   https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files#downloads-for-gda2020-digital-boundary-files
+
+# Run
+
+- Install `pip` dependencies:
+
+  ```
+  pip install -r requirements.txt
+  ```
+
+- Sync views
+
+  ```
+  chmod 755 view.sh
+  ./view.sh
+  ```
+
+- Upload any augmenting data into CouchDB (no hang up):
+
+  ```
+  chmod 755 upload_hist.sh
+  ./upload_hist.sh
+  ```
+
+- Twitter search + streaming (no hang up):
+
+  ```
+  chmod 755 search.sh harvest.py
+  ./search.sh && ./harvest.sh
+  ```
