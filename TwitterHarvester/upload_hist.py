@@ -64,7 +64,7 @@ with open(filename, "r") as f:
         content = line.strip().strip(",")
         tweet = json.loads(content)
 
-        if (tweet["doc"]["lang"] == "en" && \
+        if (tweet["doc"]["lang"] == "en" and \
             tweet["doc"]["retweeted"] == False):
 
             datetime_object = datetime.strptime(
