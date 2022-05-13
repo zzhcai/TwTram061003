@@ -12,8 +12,14 @@ from couchdb import design
 SERVER = "http://admin:admin@localhost:5984"
 server = couchdb.Server(SERVER)
 
-hist = server["historic_melb"]
-melb = server["melb_db"]
+try:
+    hist = server["historic_melb"]
+except couchdb.http.ResourceNotFound:
+    hist = server.create("historic_melb")
+try:
+    melb = server["melb_db"]
+except couchdb.http.ResourceNotFound:
+    melb = server.create("melb_db")
 
 map_sa_polarity = """
 function (doc) {
@@ -94,10 +100,10 @@ sa_polarity_sum_count = design.ViewDefinition(
 )
 sa_polarity_sum_count.sync(hist)
 
-sa_polarity_sum_count = design.ViewDefinition(
+polarity_sum_count = design.ViewDefinition(
     "geo", "polarity_sum_count", map_id_polarity, reduce_sum_count
 )
-sa_polarity_sum_count.sync(melb)
+polarity_sum_count.sync(melb)
 
 polarity_max_id = design.ViewDefinition(
     "geo", "polarity_max_id", map_id_polarity, reduce_max_id
@@ -108,5 +114,5 @@ polarity_max_id.sync(melb)
 polarity_min_id = design.ViewDefinition(
     "geo", "polarity_min_id", map_id_polarity, reduce_min_id
 )
-polarity_max_id.sync(hist)
+polarity_min_id.sync(hist)
 polarity_min_id.sync(melb)
