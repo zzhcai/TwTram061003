@@ -23,7 +23,7 @@
   ./view.sh
   ```
 
-- Upload any augmenting data into CouchDB (no hang up):
+- Add `/home/ubuntu/twitter-melb.json` into CouchDB (no hang up):
 
   ```
   chmod 755 upload_hist.sh

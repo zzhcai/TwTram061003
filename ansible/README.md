@@ -28,3 +28,9 @@
   chmod 755 run-mrc.sh
   ./run-mrc.sh
   ```
+
+- Upload some augmenting data if you want:
+
+  ```
+  scp -i cloud.key twitter-melb.json ubuntu@<db-instance-ip>:/home/ubuntu/
+  ```
