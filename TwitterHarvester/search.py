@@ -93,8 +93,6 @@ def search(query):
     for i in collection:
         for tweet in i[0]:
             methods.save_tweet(db, tweet)
-        for user in i[1]["users"]:
-            methods.save_user(user_db, user)
 
 
 if __name__ == "__main__":
@@ -111,11 +109,5 @@ if __name__ == "__main__":
         db = server[options.database]
     except couchdb.http.ResourceNotFound:
         db = server.create(options.database)
-
-    # user database
-    try:
-        user_db = server[options.userdb]
-    except couchdb.http.ResourceNotFound:
-        user_db = server.create(options.userdb)
 
     search(options.query)

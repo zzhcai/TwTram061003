@@ -114,7 +114,7 @@ def readCommand(argv):
 
     # parser.add_option('-t', '--timeline', dest='timeline', help='home timeline', default='')
 
-    parser.add_option("-u", "--userdb", dest="userdb", help="user database", default="")
+    # parser.add_option("-u", "--userdb", dest="userdb", help="user database", default="")
 
     options, otherjunk = parser.parse_args(argv)
 

@@ -1,5 +1,3 @@
-export query="("
-query+="$(python3 get_query_keywords.py -f "stops.txt")"
-query+=") (myki OR tram OR trams) lang:en -is:retweet"
-echo $query
-python3 search.py -q $query -d melb_db -u user_db
+# export query='(Balaclava OR "Box hill" OR Camberwell OR Brunswick OR Malvern OR Docklands OR Flinders OR Footscray OR Moreland OR "Port Melbourne" OR "St Kilda" OR Toorak OR Lygon OR Brunswick OR Caulfield OR "La Trobe" OR Collingwood OR Southbank) (myki OR tram OR trams) lang:en -is:retweet'
+
+python3 search.py -q '(Balaclava OR "Box hill" OR Camberwell OR Brunswick OR Malvern OR Docklands OR Flinders OR Footscray OR Moreland OR "Port Melbourne" OR "St Kilda" OR Toorak OR Lygon OR Brunswick OR Caulfield OR "La Trobe" OR Collingwood OR Southbank) (myki OR tram OR trams OR PTV) lang:en -is:retweet' -d melb_db

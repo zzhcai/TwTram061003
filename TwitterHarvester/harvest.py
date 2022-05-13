@@ -32,9 +32,6 @@ class TwitterStreaming(tweepy.StreamingClient):
     def on_tweet(self, tweet):
         methods.save_tweet(db, tweet)
 
-    def on_includes(self, includes):
-        for user in includes["users"]:
-            methods.save_user(user_db, user)
 
 
 if __name__ == "__main__":
@@ -52,11 +49,6 @@ if __name__ == "__main__":
     except couchdb.http.ResourceNotFound:
         db = server.create(options.database)
 
-    # user database
-    try:
-        user_db = server[options.userdb]
-    except couchdb.http.ResourceNotFound:
-        user_db = server.create(options.userdb)
 
     harvester = TwitterStreaming(bearer)
     rule = tweepy.StreamRule(value=options.query)
