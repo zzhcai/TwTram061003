@@ -1,0 +1,24 @@
+Melbourne,
+"Federation Square",
+"Luna Park"
+"Melbourne Cricket Ground",
+"Melbourne Museum",
+"Melbourne Zoo",
+"Melbourne Showgrounds"
+"Victoria Market",
+"National Gallery of Victoria",
+"Royal Botanic Gardens",
+"Royal Exhibition Building"
+Monash,
+RMIT,
+Deakin,
+Swinburne,
+"Yarra River",
+"Shrine of Remembrance",
+Flagstaff,
+swanston,
+"Curtin House",
+"Little Bourke",
+"Melbourne Aquarium",
+"Little Collins"
+
