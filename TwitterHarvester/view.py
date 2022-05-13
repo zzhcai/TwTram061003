@@ -34,7 +34,7 @@ for s in senti:
 
     map_id = """
     function (doc) {
-        emit([doc.id], doc.%s_score);
+        emit([id], doc.%s_score);
     }
     """ % s
 
