@@ -51,6 +51,11 @@ if __name__ == "__main__":
 
 
     harvester = TwitterStreaming(bearer)
+    
+    # clear rules
+    for r in harvester.get_rules()[0]:
+        harvester.delete_rules(r.id)
+    
     rule = tweepy.StreamRule(value=options.query)
     harvester.add_rules(rule)
 
