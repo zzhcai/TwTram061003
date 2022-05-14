@@ -19,20 +19,24 @@
 - Sync views
 
   ```
-  chmod 755 view.sh
+  chmod +x view.sh
   ./view.sh
   ```
 
 - Add `/home/ubuntu/twitter-melb.json` into CouchDB (no hang up):
 
   ```
-  chmod 755 upload_hist.sh
+  chmod +x upload_hist.sh
   ./upload_hist.sh
   ```
 
 - Twitter search + streaming (no hang up):
 
   ```
-  chmod 755 search.sh harvest.py
-  ./search.sh && ./harvest.sh
+  export bearer=<your-twitter-app-bearer-token>
+  chmod +x search_by_*.sh stream_by_*.sh
+  ./search_by_destination.sh
+  ./search_by_landmark.sh
+  ./stream_by_destination.sh
+  ./stream_by_landmark.sh
   ```

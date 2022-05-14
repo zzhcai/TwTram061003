@@ -10,23 +10,13 @@ import sys
 import couchdb
 import tweepy
 import methods
+import os
 
 MAX_RESULT = 10  # number of search tweets per page
 PAGE_LIMIT = float("inf")  # number of pages
 
-
-CONSUMER_KEY = "l1m1kwTc68Dguv9yKmFpaxTsR"
-CONSUMER_SECRET = "WVgjbKyz9ICmMZRBbh2dxAHieOv1JWwoKdwMX77tUNvpibjaG1"
-OAUTH_TOKEN = "1513822841426554881-XAos7hxcInZX2zuUtBWEHrNUgHVyfi"
-OAUTH_TOKEN_SECRET = "IQRmIeodvV8wgmt9DtxUruUQJ95G32cSF4mDu2jL8kkVK"
-bearer = "AAAAAAAAAAAAAAAAAAAAAP6kbQEAAAAAMonSjW3WVKpcrP6y%2BstoNcEFz3g%3DGPSE7WXwGTZSu0CrXRRVEuJaTeBlfPBAKOz6e8yVRMCaOErR6q"
-
 client = tweepy.Client(
-    bearer_token=bearer,
-    consumer_key=CONSUMER_KEY,
-    consumer_secret=CONSUMER_SECRET,
-    access_token=OAUTH_TOKEN,
-    access_token_secret=OAUTH_TOKEN_SECRET,
+    bearer_token=os.getenv('bearer'),
     wait_on_rate_limit=True,
 )
 
@@ -93,8 +83,6 @@ def search(query):
     for i in collection:
         for tweet in i[0]:
             methods.save_tweet(db, tweet)
-        for user in i[1]["users"]:
-            methods.save_user(user_db, user)
 
 
 if __name__ == "__main__":
@@ -111,11 +99,5 @@ if __name__ == "__main__":
         db = server[options.database]
     except couchdb.http.ResourceNotFound:
         db = server.create(options.database)
-
-    # user database
-    try:
-        user_db = server[options.userdb]
-    except couchdb.http.ResourceNotFound:
-        user_db = server.create(options.userdb)
 
     search(options.query)
