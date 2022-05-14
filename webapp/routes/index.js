@@ -6,7 +6,7 @@ const key = 'AIzaSyDqODW7h13yD9PzJ4wv2y8EJ_pdhy71vp0';
 
 router.get('/', function (req, res, next) {
   res.render('index', {
-    title: 'temp title',
+    title: 'Yarra Tram Traffic Sentiment Analysis',
     key: key
   });
 });

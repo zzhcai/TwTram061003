@@ -10,6 +10,7 @@ webapp.init = function () {
 	});
 	webapp.map.data.setStyle({
 		fillColor: 'blue',
+		strokeOpacity: 0,
 		strokeWeight: 1
 	});
 	webapp.map.data.addListener('mouseover', function (event) {
@@ -26,8 +27,8 @@ webapp.init = function () {
 		if (prop[getName(event.feature)]) {
 			value = prop[getName(event.feature)].value;
 		}
-		value = value ? value.toFixed(3) : '';
-		showTooltip(getName(event.feature) + ' ' + value, pos);
+		value = value ? ` (${value.toFixed(3)})` : '';
+		showTooltip(getName(event.feature) + value, pos);
 	});
 	webapp.map.data.addListener('mouseout', hideTooltip);
 	document.getElementById('saSelector').addEventListener('change', webapp.init);
@@ -73,6 +74,7 @@ webapp.colourAreas = async function () {
 		return {
 			fillColor: color,
 			fillOpacity: opa,
+			strokeOpacity: 0.3,
 			strokeWeight: 1
 		}
 	});

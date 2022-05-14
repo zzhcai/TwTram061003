@@ -13,12 +13,12 @@ html
     select(id="designSelector")
       each i in ["polarity", "temper", "attitude", "introspection", "sensitivity"]
         option= i
-    div(id="legend")
+    div(id="legend" style="width:400px")
       div(id="valueMin") min
       div(class="color-key")
         span(id="data-caret") ◆
       div(id="valueMax") max
     div(id="tooltip" style="visibility: hidden; position: absolute; top: 20px; left: 20px; z-index: 1")
       span(id="tooltiptext") blah
-    div(id="map" style="height:500px; width:100%")
+    div(id="map" style="height:400px; width:400px")
     script(defer src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=webapp.init&v=weekly")
