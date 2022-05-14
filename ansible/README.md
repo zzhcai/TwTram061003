@@ -25,12 +25,13 @@
 - Create instances and deploy config related
 
   ```
-  chmod 755 run-mrc.sh
+  chmod +x run-mrc.sh
   ./run-mrc.sh
   ```
 
-- Upload some augmenting data if you want:
+- Upload some augmenting tweets if you want:
 
   ```
+  ln -s <your-data-path>/twitter-melb.json
   scp -i cloud.key twitter-melb.json ubuntu@<db-instance-ip>:/home/ubuntu/
   ```
