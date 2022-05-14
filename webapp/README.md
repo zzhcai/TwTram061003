@@ -1,12 +1,5 @@
 # Requirements
 
-Install `nodejs` and `npm`.
-On Ubuntu:
-
-```
-sudo apt install nodejs npm
-```
-
 To install `npm` dependencies:
 
 ```

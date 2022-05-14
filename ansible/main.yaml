@@ -55,3 +55,10 @@
     - node: "{{ groups['mrc'][0] }}"
   roles:
     - role: setup/couch
+
+- name: Install nodejs and npm on webapp
+  become: yes
+  hosts: mrc[3]
+  gather_facts: no
+  roles:
+    - role: setup/webapp
