@@ -1,11 +1,24 @@
-extends layout
-
-block head
-  script var geoJSON = '#{geoJSON}'
-  script(src="javascripts/index.js")
-
-block content
-  h1= title
-  p(id="textField")
-  div(id="map" style="height:400px; width:100%")
-  script(defer src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap&v=weekly")
+doctype html
+html
+  head
+    title= title
+    script(src="javascripts/constants.js")
+    script(src="javascripts/index.js")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+    select(id="saSelector")
+      each i in ['sa4', 'sa3', 'sa2']
+        option= i
+    select(id="designSelector")
+      each i in ["polarity", "temper", "attitude", "introspection", "sensitivity"]
+        option= i
+    div(id="legend")
+      div(id="valueMin") min
+      div(class="color-key")
+        span(id="data-caret") ◆
+      div(id="valueMax") max
+    div(id="tooltip" style="visibility: hidden; position: absolute; top: 20px; left: 20px; z-index: 1")
+      span(id="tooltiptext") blah
+    div(id="map" style="height:400px; width:100%")
+    script(defer src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=webapp.init&v=weekly")
