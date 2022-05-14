@@ -32,9 +32,15 @@ for s in senti:
     }
     """ % s
 
+    sa_map_id = """
+    function (doc) {
+        emit([doc.sa4, doc.sa3, doc.sa2, doc._id], doc.%s_score);
+    }
+    """ % s
+
     map_id = """
     function (doc) {
-        emit([id], doc.%s_score);
+        emit([doc._id], doc.%s_score);
     }
     """ % s
 
@@ -70,7 +76,7 @@ for s in senti:
             for (var j = 0; j < values.length; j++) {
                 if (values[j] >= results.max) {
                     results.max = values[j];
-                    results.id = keys[i];
+                    results.id = keys[j][keys[j].length-1];
                 }
             }
         }
@@ -92,7 +98,7 @@ for s in senti:
             for (var j = 0; j < values.length; j++) {
                 if (values[j] <= results.min) {
                     results.min = values[j];
-                    results.id = keys[i];
+                    results.id = keys[j][keys[j].length-1];
                 }
             }
         }
@@ -110,14 +116,22 @@ for s in senti:
     )
     sum_count.sync(melb)
 
+    sa_max_id = design.ViewDefinition(
+        s, "sa_max_id", sa_map_id, reduce_max_id
+    )
+    sa_max_id.sync(hist)
+
     max_id = design.ViewDefinition(
         s, "max_id", map_id, reduce_max_id
     )
-    max_id.sync(hist)
     max_id.sync(melb)
+
+    sa_min_id = design.ViewDefinition(
+        s, "sa_min_id", sa_map_id, reduce_min_id
+    )
+    sa_min_id.sync(hist)
 
     min_id = design.ViewDefinition(
         s, "min_id", map_id, reduce_min_id
     )
-    min_id.sync(hist)
     min_id.sync(melb)
