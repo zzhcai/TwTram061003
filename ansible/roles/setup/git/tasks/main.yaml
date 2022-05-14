@@ -17,4 +17,4 @@
   copy:
     src: vars/setup.yaml
     dest: /home/ubuntu/comp90024/ansible/vars/setup.yaml
-    mode: 644
+    mode: "644"

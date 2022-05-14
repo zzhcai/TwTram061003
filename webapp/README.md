@@ -9,5 +9,5 @@ npm install
 To start the webapp:
 
 ```
-npm start
+nohup npm start &
 ```
