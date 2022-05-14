@@ -33,6 +33,7 @@
 - Twitter search + streaming (no hang up):
 
   ```
+  export bearer=<your-twitter-app-bearer-token>
   chmod +x search_by_*.sh stream_by_*.sh
   ./search_by_destination.sh
   ./search_by_landmark.sh

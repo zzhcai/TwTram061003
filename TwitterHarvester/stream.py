@@ -12,13 +12,6 @@ import tweepy
 import methods
 
 
-CONSUMER_KEY = "l1m1kwTc68Dguv9yKmFpaxTsR"
-CONSUMER_SECRET = "WVgjbKyz9ICmMZRBbh2dxAHieOv1JWwoKdwMX77tUNvpibjaG1"
-OAUTH_TOKEN = "1513822841426554881-XAos7hxcInZX2zuUtBWEHrNUgHVyfi"
-OAUTH_TOKEN_SECRET = "IQRmIeodvV8wgmt9DtxUruUQJ95G32cSF4mDu2jL8kkVK"
-bearer = "AAAAAAAAAAAAAAAAAAAAAP6kbQEAAAAAMonSjW3WVKpcrP6y%2BstoNcEFz3g%3DGPSE7WXwGTZSu0CrXRRVEuJaTeBlfPBAKOz6e8yVRMCaOErR6q"
-
-
 class TwitterStreaming(tweepy.StreamingClient):
     def on_connect(self):
         print("Connected to Twitter, start streaming...")
@@ -31,7 +24,6 @@ class TwitterStreaming(tweepy.StreamingClient):
 
     def on_tweet(self, tweet):
         methods.save_tweet(db, tweet)
-
 
 
 if __name__ == "__main__":
@@ -50,7 +42,7 @@ if __name__ == "__main__":
         db = server.create(options.database)
 
 
-    harvester = TwitterStreaming(bearer)
+    harvester = TwitterStreaming(options.bearer)
     
     # clear rules
     for r in harvester.get_rules()[0]:

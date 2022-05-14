@@ -112,6 +112,10 @@ def readCommand(argv):
         "-d", "--database", dest="database", help="database name", default=""
     )
 
+    parser.add_option(
+        "-b", "--bearer", dest="bearer", help="twitter app bearer token", default=""
+    )
+
     # parser.add_option('-t', '--timeline', dest='timeline', help='home timeline', default='')
 
     # parser.add_option("-u", "--userdb", dest="userdb", help="user database", default="")

@@ -14,15 +14,8 @@ import methods
 MAX_RESULT = 10  # number of search tweets per page
 PAGE_LIMIT = float("inf")  # number of pages
 
-
-CONSUMER_KEY = "l1m1kwTc68Dguv9yKmFpaxTsR"
-CONSUMER_SECRET = "WVgjbKyz9ICmMZRBbh2dxAHieOv1JWwoKdwMX77tUNvpibjaG1"
-OAUTH_TOKEN = "1513822841426554881-XAos7hxcInZX2zuUtBWEHrNUgHVyfi"
-OAUTH_TOKEN_SECRET = "IQRmIeodvV8wgmt9DtxUruUQJ95G32cSF4mDu2jL8kkVK"
-bearer = "AAAAAAAAAAAAAAAAAAAAAP6kbQEAAAAAMonSjW3WVKpcrP6y%2BstoNcEFz3g%3DGPSE7WXwGTZSu0CrXRRVEuJaTeBlfPBAKOz6e8yVRMCaOErR6q"
-
 client = tweepy.Client(
-    bearer_token=bearer,
+    bearer_token=options.bearer,
     consumer_key=CONSUMER_KEY,
     consumer_secret=CONSUMER_SECRET,
     access_token=OAUTH_TOKEN,
