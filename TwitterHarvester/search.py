@@ -10,16 +10,13 @@ import sys
 import couchdb
 import tweepy
 import methods
+import os
 
 MAX_RESULT = 10  # number of search tweets per page
 PAGE_LIMIT = float("inf")  # number of pages
 
 client = tweepy.Client(
-    bearer_token=options.bearer,
-    consumer_key=CONSUMER_KEY,
-    consumer_secret=CONSUMER_SECRET,
-    access_token=OAUTH_TOKEN,
-    access_token_secret=OAUTH_TOKEN_SECRET,
+    bearer_token=os.getenv('bearer'),
     wait_on_rate_limit=True,
 )
 
