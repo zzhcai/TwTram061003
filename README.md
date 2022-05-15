@@ -38,7 +38,6 @@ COMP90024 Cluster and Cloud Computing - 2022 Semester 1 - Project 2: Melbourne t
 |   |     └──── ..
 |   ├──── README.md
 |   ├──── methods.py
-|   ├──── requirements.txt
 |   ├──── search.py                                      # Twitter search
 |   ├──── search_by_destination.sh
 |   ├──── search_by_landmark.sh
@@ -50,6 +49,12 @@ COMP90024 Cluster and Cloud Computing - 2022 Semester 1 - Project 2: Melbourne t
 |   ├──── view.py                                        # Sync CouchDB views
 |   └──── view.sh
 ├── webapp/
+|   ├──── public/
+|   |     ├──── jsons/                                   # GeoJSON shapefiles
+|   |     |     ├──── sa2.json
+|   |     |     ├──── sa3.json
+|   |     |     └──── sa4.json
+|   |     └──── ..
 |   └──── ..
 ├── .gitattributes
 ├── .gitignore
