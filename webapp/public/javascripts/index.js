@@ -3,13 +3,59 @@ webapp.geoJSONData = {};
 webapp.features = [];
 
 document.getElementById("topic").addEventListener("change", onTopicChange);
-document.getElementById("saSelector").addEventListener("change", webapp.init);
 document.getElementById("designSelector").addEventListener("change",
   () => document.getElementById("topic").selectedOptions[0].value === "Geo-wise comparison" ?
     webapp.colourAreas() : drawChart());
 
 google.charts.load("current", { packages: ["corechart"] });
 // google.charts.setOnLoadCallback(drawChart);
+
+async function myFetch(url) {
+  let json = await fetch(url, {
+    headers: {
+      'Authorization': 'Basic ' + btoa('admin:admin'),
+    },
+  }).then(r => r.json());
+  return json;
+}
+
+async function getHistExtremeID() {
+  if (webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max]) {
+    return;
+  }
+  webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max] = {};
+  let url = webapp.viewURL(webapp.design, webapp.view_sa_max, webapp.sa);
+  let json = await myFetch(url);
+  for (var r of json.rows) {
+    var name = r.key[r.key.length - 1];
+    webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max][name] = r.value.id;
+  }
+  webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_min] = {};
+  url = webapp.viewURL(webapp.design, webapp.view_sa_min, webapp.sa);
+  json = await myFetch(url);
+  for (var r of json.rows) {
+    var name = r.key[r.key.length - 1];
+    webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_min][name] = r.value.id;
+  }
+}
+
+async function getHistTwitter(id) {
+  let url = webapp.server + webapp.db + '/' + id;
+  let json = await myFetch(url);
+  return { score: json[webapp.design + '_score'].toFixed(3), text: json.text };
+}
+
+async function getCurrTwitter(id) {
+  let url = webapp.server + webapp.mel_db + '/' + id;
+  let json = await myFetch(url);
+  return { score: json[webapp.design + '_score'].toFixed(3), text: json.text };
+}
+
+function showTweets(area, maxT, minT) {
+  document.getElementById('area').innerHTML = area;
+  document.getElementById('maxT').innerHTML = "Max score: " + maxT.score + ' - ' + maxT.text;
+  document.getElementById('minT').innerHTML = "Min score: " + minT.score + ' - ' + minT.text;
+}
 
 function onTopicChange() {
   let topic = document.getElementById("topic").selectedOptions[0].value;
@@ -92,7 +138,7 @@ webapp.init = function () {
     strokeWeight: 1,
   });
   webapp.map.data.addListener("mouseover", function (event) {
-    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view];
+    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view_avg];
     let percent = -10;
     if (prop[getName(event.feature)]) {
       percent =
@@ -111,8 +157,17 @@ webapp.init = function () {
     showTooltip(getName(event.feature) + value, pos);
   });
   webapp.map.data.addListener("mouseout", hideTooltip);
+  webapp.map.data.addListener("click", async function (event) {
+    let name = getName(event.feature);
+    if (name in webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max]) {
+      let maxT = await getHistTwitter(webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max][name]);
+      let minT = await getHistTwitter(webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_min][name]);
+      showTweets(name, maxT, minT);
+    }
+  })
   webapp.show();
 };
+document.getElementById("saSelector").addEventListener("change", webapp.init);
 
 webapp.show = function () {
   webapp.sa = document.getElementById("saSelector").selectedOptions[0].value;
@@ -129,9 +184,10 @@ webapp.showAreas = async function () {
 
 webapp.colourAreas = async function () {
   await fetchView();
+  getHistExtremeID();
   webapp.map.data.setStyle(function (feature) {
     const name = getName(feature);
-    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view];
+    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view_avg];
     let opa = 0.2;
     let color = "grey";
     if (prop[name]) {
@@ -187,18 +243,14 @@ async function fetchGeoJSON() {
 
 async function fetchView() {
   webapp.design = document.getElementById("designSelector").selectedOptions[0].value;
-  webapp.view = "sa_sum_count";
   if (
     webapp.viewData[webapp.sa] &&
     webapp.viewData[webapp.sa][webapp.design] &&
-    webapp.viewData[webapp.sa][webapp.design][webapp.view]
+    webapp.viewData[webapp.sa][webapp.design][webapp.view_avg]
   ) {
     return;
   }
-  let r = await fetch(webapp.viewURL(webapp.design, webapp.view, webapp.sa), {
-    headers: { Authorization: "Basic " + btoa("admin:admin") },
-  });
-  let data = await r.json();
+  let data = await myFetch(webapp.viewURL(webapp.design, webapp.view_avg, webapp.sa));
   data = data.rows.map((r) => ({
     k: r.key[r.key.length - 1],
     v: r.value.sum / r.value.count,
@@ -207,8 +259,8 @@ async function fetchView() {
   webapp.viewData[webapp.sa] = webapp.viewData[webapp.sa] || {};
   webapp.viewData[webapp.sa][webapp.design] =
     webapp.viewData[webapp.sa][webapp.design] || {};
-  webapp.viewData[webapp.sa][webapp.design][webapp.view] = {};
-  let avg = webapp.viewData[webapp.sa][webapp.design][webapp.view];
+  webapp.viewData[webapp.sa][webapp.design][webapp.view_avg] = {};
+  let avg = webapp.viewData[webapp.sa][webapp.design][webapp.view_avg];
   (avg.valueMin = Number.MAX_VALUE), (avg.valueMax = -Number.MAX_VALUE);
   for (var i in data) {
     let value = data[i].v;
