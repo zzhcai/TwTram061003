@@ -15,15 +15,15 @@ function onTopicChange() {
   let topic = document.getElementById("topic").selectedOptions[0].value;
   if (topic === "Geo-wise comparison") {
     document.getElementById("chart").style.display = "none";
-    document.getElementById("map").style.display = "block";
-    document.getElementById("legend").style.display = "-webkit-box";
+    document.getElementById("map").style.display = "inline-block";
+    document.getElementById("legend").style.visibility = "visible";
     document.getElementById("saSelector").style.display = "inline";
     document.getElementById("year").style.display = "inline";
     webapp.init();
   } else {
-    document.getElementById("chart").style.display = "block";
+    document.getElementById("chart").style.display = "inline-block";
     document.getElementById("map").style.display = "none";
-    document.getElementById("legend").style.display = "none";
+    document.getElementById("legend").style.visibility = "hidden";
     document.getElementById("saSelector").style.display = "none";
     document.getElementById("year").style.display = "none";
     drawChart();
