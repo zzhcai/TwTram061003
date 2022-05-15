@@ -2,6 +2,50 @@ webapp.viewData = {};
 webapp.geoJSONData = {};
 webapp.features = [];
 
+document.getElementById('topic').addEventListener('change', onTopicChange);
+document.getElementById('saSelector').addEventListener('change', webapp.init);
+document.getElementById('designSelector').addEventListener('change', webapp.colourAreas);
+
+google.charts.load('current', { packages: ['corechart'] });
+// google.charts.setOnLoadCallback(drawChart);
+
+function onTopicChange() {
+	let topic = document.getElementById('topic').selectedOptions[0].value;
+	if (topic == 'Geo-wise comparison') {
+		document.getElementById('chart').style.display = 'none';
+		document.getElementById('map').style.display = 'block';
+		document.getElementById('legend').style.display = '-webkit-box';
+		document.getElementById('saSelector').style.display = 'inline';
+		document.getElementById('year').style.display = 'inline';
+		webapp.init();
+	} else {
+		document.getElementById('chart').style.display = 'block';
+		document.getElementById('map').style.display = 'none';
+		document.getElementById('legend').style.display = 'none';
+		document.getElementById('saSelector').style.display = 'none';
+		document.getElementById('year').style.display = 'none';
+		drawChart();
+	}
+}
+
+function drawChart() {
+	var data = google.visualization.arrayToDataTable([
+		['Contry', 'Mhl'],
+		['Italy', 55],
+		['France', 49],
+		['Spain', 44],
+		['USA', 24],
+		['Argentina', 15]
+	]);
+
+	var options = {
+		title: 'World Wide Wine Production'
+	};
+
+	var chart = new google.visualization.BarChart(document.getElementById('chart'));
+	chart.draw(data, options);
+}
+
 webapp.init = function () {
 	const unimelb = { lat: -37.797702, lng: 144.961029 };
 	webapp.map = new google.maps.Map(document.getElementById('map'), {
@@ -31,8 +75,6 @@ webapp.init = function () {
 		showTooltip(getName(event.feature) + value, pos);
 	});
 	webapp.map.data.addListener('mouseout', hideTooltip);
-	document.getElementById('saSelector').addEventListener('change', webapp.init);
-	document.getElementById('designSelector').addEventListener('change', webapp.colourAreas);
 	webapp.show();
 };
 
