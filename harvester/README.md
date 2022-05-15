@@ -10,12 +10,6 @@
 
 # Run on VM
 
-- Install `pip` dependencies:
-
-  ```
-  pip install -r requirements.txt
-  ```
-
 - Sync views
 
   ```

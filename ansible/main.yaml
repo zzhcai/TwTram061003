@@ -56,6 +56,12 @@
   roles:
     - role: setup/couch
 
+- name: Install pip requirements on harvesters
+  hosts: mrc[1:3]
+  gather_facts: no
+  roles:
+    - role: setup/harvester
+
 - name: Install nodejs and npm on webapp
   become: yes
   hosts: mrc[3]

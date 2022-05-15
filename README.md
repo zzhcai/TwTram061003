@@ -21,8 +21,9 @@ COMP90024 Cluster and Cloud Computing - 2022 Semester 1 - Project 2: Melbourne t
 |   |           |     └──── templates/main.yaml          # Docke-compose template
 |   |           ├──── docker/tasks/main.yaml             # Install Docker dependencies
 |   |           ├──── git/tasks/main.yaml                # Pull code
+|   |           ├──── harvester/tasks/main.yaml          # Install harvester pip requirements
 |   |           ├──── mount-volume/tasks/main.yaml       # Auto-mount volume
-|   |           └──── webapp/tasks/main.yaml             # Install webapp dependencies
+|   |           └──── webapp/tasks/main.yaml             # Install webapp apt dependencies
 |   ├──── vars/
 |   |     ├──── openstack.yaml                           # Instance vars for creation
 |   |     └──── setup.yaml                               # Instance IPs
