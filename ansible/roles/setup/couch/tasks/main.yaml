@@ -61,3 +61,4 @@
 - name: CouchDB CORS
   become: yes
   shell: docker exec -it couch sed -ibk -e 's/\[httpd\]/\[httpd\]\nenable_cors = true\n\[cors\]\norigins = *\ncredentials = true\nmethods = GET, PUT, POST, HEAD, DELETE\nheaders = accept, authorization, content-type, origin, referer, x-csrf-token\n/g' /opt/couchdb/etc/local.ini && docker restart couch
+  when: node == "{{ db }}"
