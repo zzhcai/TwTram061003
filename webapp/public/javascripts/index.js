@@ -4,16 +4,16 @@ webapp.features = [];
 
 document.getElementById("topic").addEventListener("change", onTopicChange);
 document.getElementById("saSelector").addEventListener("change", webapp.init);
-document
-  .getElementById("designSelector")
-  .addEventListener("change", webapp.colourAreas);
+document.getElementById("designSelector").addEventListener("change",
+  () => document.getElementById("topic").selectedOptions[0].value === "Geo-wise comparison" ?
+    webapp.colourAreas() : drawChart());
 
 google.charts.load("current", { packages: ["corechart"] });
 // google.charts.setOnLoadCallback(drawChart);
 
 function onTopicChange() {
   let topic = document.getElementById("topic").selectedOptions[0].value;
-  if (topic == "Geo-wise comparison") {
+  if (topic === "Geo-wise comparison") {
     document.getElementById("chart").style.display = "none";
     document.getElementById("map").style.display = "block";
     document.getElementById("legend").style.display = "-webkit-box";
@@ -30,7 +30,7 @@ function onTopicChange() {
   }
 }
 
-function drawChart() {
+async function drawChart() {
   //   var data = google.visualization.arrayToDataTable([
   //     ["Year", "Visitations", { role: "style" }],
   //     ["2010", 10, "color: gray"],
@@ -44,22 +44,34 @@ function drawChart() {
   //     ],
   //   ]);
 
+  webapp.design = document.getElementById("designSelector").selectedOptions[0].value;
   var data = google.visualization.arrayToDataTable([
     ["Year", "Average Score", { role: "style" }],
     [
       "2014-15",
-      10,
+      parseFloat((await fetch(webapp.hisViewURL(webapp.design), {
+        headers: { Authorization: "Basic " + btoa("admin:admin") },
+      }).then(r => r.json()).then(json => json.rows[0].value.sum / json.rows[0].value.count))
+        .toFixed(3)),
       "stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF",
     ],
     [
       "2022",
-      14,
+      parseFloat((await fetch(webapp.melViewURL(webapp.design), {
+        headers: { Authorization: "Basic " + btoa("admin:admin") },
+      }).then(r => r.json()).then(json => json.rows[0].value.sum / json.rows[0].value.count))
+        .toFixed(3)),
       "stroke-color: #76A7FA; stroke-width: 4; fill-color: #76A7FA; fill-opacity: 0.4",
     ],
   ]);
 
   var options = {
     title: "2014-15 vs 2022 traffic tweets sentiment comparison",
+    legend: { position: 'none' },
+    vAxis: {
+      title: 'score',
+      // ticks: [-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]
+    }
   };
 
   var chart = new google.visualization.ColumnChart(
@@ -174,8 +186,7 @@ async function fetchGeoJSON() {
 }
 
 async function fetchView() {
-  webapp.design =
-    document.getElementById("designSelector").selectedOptions[0].value;
+  webapp.design = document.getElementById("designSelector").selectedOptions[0].value;
   webapp.view = "sa_sum_count";
   if (
     webapp.viewData[webapp.sa] &&
