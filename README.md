@@ -57,7 +57,14 @@ More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 |   |     |     ├──── sa2.json
 |   |     |     ├──── sa3.json
 |   |     |     └──── sa4.json
+|   |     ├──── javascripts/                             # Script files to run in the browser
+|   |     |     └──── index.js
 |   |     └──── ..
+|   ├──── route/                                         # Server side scripts to redirect requests
+|   |     └──── index.js
+|   ├──── views/                                         # Pug templates that can be rendered into HTML
+|   |     └──── index.pug
+|   ├──── app.js                                         # The main script running on server
 |   └──── ..
 ├── .gitattributes
 ├── .gitignore
