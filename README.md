@@ -1,6 +1,6 @@
 # Summary
 
-Cloud computing technologies make it simple for data analysis in a scalable manner. In this project, we examine the livability of Melbourne through the lens of Yarra Trams. A sentiment analysis of recent and past tweets (in 2014-2015) associated with trams in Melbourne, juxtaposed with AURIN statistics, may help shed some light on this topic. We use Ansible to automatically configure resources and deploy services on the Melbourne Research Cloud. Data are stored across virtual machines in CouchDB Docker containers, and several nodes form a cluster that offers replication for fault tolerance. Following that, a map visualization is available for the public to view our latest analytical results.
+Cloud computing technologies make it simple for data analysis in a scalable manner. In this project, we examine the livability of Melbourne through the lens of Yarra Trams. A sentiment analysis of recent and past tweets (2014-2015) associated with trams in Melbourne, juxtaposed with AURIN statistics, may help shed some light on this topic. We use Ansible to automatically configure resources and deploy services on the Melbourne Research Cloud. Data are stored on virtual machines in CouchDB Docker containers, and several nodes across form a cluster that offers replication for fault tolerance. Following that, a map visualization is available for the public to view our latest, real-time analytical results.
 
 More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 
