@@ -8,7 +8,6 @@ Zhen Cai (1049487), Ziqi Zhang (1241157)
 
 webapp.viewData = {};
 webapp.geoJSONData = {};
-webapp.features = [];
 
 document.getElementById("topic").addEventListener("change", onTopicChange);
 document
@@ -271,7 +270,7 @@ webapp.aurinShow = function () {
 
 webapp.showAreas = async function (map) {
   await fetchGeoJSON();
-  webapp.features = map.data.addGeoJson(webapp.geoJSONData[webapp.sa], {
+  map.data.addGeoJson(webapp.geoJSONData[webapp.sa], {
     idPropertyName: "name",
   });
 };
@@ -477,7 +476,12 @@ function udpateColumn() {
   while (cs.length) {
     cs.remove(cs[0]);
   }
+  let options = [];
   for (var i in webapp.viewData[webapp.sa][webapp.aurin]) {
+    options.push(i);
+  }
+  options.sort();
+  for (var i of options) {
     let opt = document.createElement("option");
     opt.text = i;
     cs.add(opt);
