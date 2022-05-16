@@ -49,7 +49,8 @@ More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 |   ├──── upload_hist.py                                 # Adding historic tweets to database
 |   ├──── upload_hist.sh
 |   ├──── view.py                                        # Sync CouchDB views
-|   └──── view.sh
+|   ├──── view.sh
+|   └──── aurin_to_db.py                                 # Upload downloaded AURIN Json to couchdb
 ├── webapp/
 |   ├──── public/
 |   |     ├──── jsons/                                   # GeoJSON shapefiles
