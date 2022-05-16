@@ -24,11 +24,7 @@ google.charts.load("current", { packages: ["corechart"] });
 // google.charts.setOnLoadCallback(drawChart);
 
 async function myFetch(url) {
-  let json = await fetch(url, {
-    headers: {
-      Authorization: "Basic " + btoa("admin:admin"),
-    },
-  }).then((r) => r.json());
+  let json = await fetch('/db/' + url).then((r) => r.json());
   return json;
 }
 
