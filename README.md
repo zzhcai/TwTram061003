@@ -61,6 +61,7 @@ More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 |   |     |     └──── index.js
 |   |     └──── ..
 |   ├──── route/                                         # Server side scripts to redirect requests
+|   |     ├──── db.js
 |   |     └──── index.js
 |   ├──── views/                                         # Pug templates that can be rendered into HTML
 |   |     └──── index.pug
