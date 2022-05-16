@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "axios": "*",
     "cookie-parser": "*",
     "debug": "*",
     "express": "*",
