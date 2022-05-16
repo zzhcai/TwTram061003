@@ -223,6 +223,53 @@ webapp.init = function () {
 };
 document.getElementById("saSelector").addEventListener("change", webapp.init);
 
+webapp.aurin_init = function () {
+  const unimelb = { lat: -37.797702, lng: 144.961029 };
+  webapp.map = new google.maps.Map(document.getElementById("aurinMap"), {
+    zoom: 8,
+    center: unimelb,
+  });
+  webapp.map.data.setStyle({
+    fillColor: "blue",
+    strokeOpacity: 0,
+    strokeWeight: 1,
+  });
+  webapp.map.data.addListener("mouseover", function (event) {
+    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view_avg];
+    let percent = -10;
+    if (prop[getName(event.feature)]) {
+      percent =
+        ((prop[getName(event.feature)].value - prop.valueMin) /
+          (prop.valueMax - prop.valueMin)) *
+        100;
+    }
+    document.getElementById("aurinData-caret").style.display = "block";
+    document.getElementById("aurinData-caret").style.paddingLeft =
+      percent + "%";
+    let pos = { x: event.domEvent.clientX, y: event.domEvent.clientY };
+    let value;
+    if (prop[getName(event.feature)]) {
+      value = prop[getName(event.feature)].value;
+    }
+    value = value ? ` (${value.toFixed(3)})` : "";
+    showTooltip(getName(event.feature) + value, pos);
+  });
+  webapp.map.data.addListener("mouseout", hideTooltip);
+  webapp.map.data.addListener("click", async function (event) {
+    let name = getName(event.feature);
+    if (name in webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max]) {
+      let maxT = await getHistTwitter(
+        webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max][name]
+      );
+      let minT = await getHistTwitter(
+        webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_min][name]
+      );
+      showTweets(name, maxT, minT);
+    }
+  });
+  webapp.show();
+};
+
 webapp.show = function () {
   webapp.sa = document.getElementById("saSelector").selectedOptions[0].value;
   webapp.showAreas();

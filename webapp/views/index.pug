@@ -25,6 +25,11 @@ html
       div(class="color-key")
         span(id="data-caret") ◆
       div(id="valueMax") max
+    div(id="aurinLegend" style="width:30%; margin-left: 70%")
+      div(id="aurinValueMin") min
+      div(class="color-key")
+        span(id="aurinData-caret") ◆
+      div(id="aurinValueMax") max
     div(id="tooltip" style="visibility: hidden; position: absolute; top: 20px; left: 20px; z-index: 1")
       span(id="tooltiptext")
     div(id="map" style="width:32.5%; height:500px; display:inline-block")
@@ -34,5 +39,6 @@ html
       p(id='area')
       p(id='maxT')
       p(id='minT')
+    
     div(id='aurinMap' style="width:32.5%; height:500px; display:inline-block; margin-left:35%; background-color:green")
     div(id='aurinChart' style="display:none; width:32.5%; height:500px; margin-left:35%")
