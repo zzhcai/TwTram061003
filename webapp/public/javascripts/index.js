@@ -76,26 +76,28 @@ function onTopicChange() {
   let topic = document.getElementById("topic").selectedOptions[0].value;
   if (topic === "Geo-wise comparison") {
     document.getElementById("chart").style.display = "none";
-    document.getElementById("aurinChart").style.display = "none";
     document.getElementById("map").style.display = "inline-block";
     document.getElementById("aurinMap").style.display = "inline-block";
     document.getElementById("legend").style.visibility = "visible";
     document.getElementById("aurinLegend").style.visibility = "visible";
     document.getElementById("saSelector").style.display = "inline";
     document.getElementById("year").style.display = "inline";
+    document.getElementById("aurinSelector").style.display = "inline";
+    document.getElementById("columnSelector").style.display = "inline";
+    document.getElementById("prompt").style.display = "inline";
     webapp.map_init();
-    webapp.aurin_init();
   } else {
     document.getElementById("chart").style.display = "inline-block";
-    document.getElementById("aurinChart").style.display = "inline-block";
     document.getElementById("map").style.display = "none";
     document.getElementById("aurinMap").style.display = "none";
     document.getElementById("legend").style.visibility = "hidden";
     document.getElementById("aurinLegend").style.visibility = "hidden";
     document.getElementById("saSelector").style.display = "none";
     document.getElementById("year").style.display = "none";
+    document.getElementById("aurinSelector").style.display = "none";
+    document.getElementById("columnSelector").style.display = "none";
+    document.getElementById("prompt").style.display = "none";
     drawChart();
-    drawAurinChart();
   }
 }
 
@@ -163,48 +165,6 @@ async function drawChart() {
     `2014-15: </br> Max score: ${his_max.score} - ${his_max.text} </br></br>Min score: ${his_min.score} - ${his_min.text}`,
     `</br>2022: </br> Max score: ${cur_max.score} - ${cur_max.text} </br></br>Min score: ${cur_min.score} - ${cur_min.text}`
   );
-}
-
-async function drawAurinChart() {
-  webapp.design =
-    document.getElementById("designSelector").selectedOptions[0].value;
-  var data = google.visualization.arrayToDataTable([
-    ["Year", "Average Score", { role: "style" }],
-    [
-      "2014-15",
-      parseFloat(
-        (
-          await myFetch(webapp.hisViewURL(webapp.design))
-            .then((json) => json.rows[0].value.sum / json.rows[0].value.count)
-        ).toFixed(3)
-      ),
-      "stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF",
-    ],
-    [
-      "2022",
-      parseFloat(
-        (
-          await myFetch(webapp.melViewURL(webapp.design, webapp.view_sum))
-            .then((json) => json.rows[0].value.sum / json.rows[0].value.count)
-        ).toFixed(3)
-      ),
-      "stroke-color: #76A7FA; stroke-width: 4; fill-color: #76A7FA; fill-opacity: 0.4",
-    ],
-  ]);
-
-  var options = {
-    title: "2014-15 vs 2022 traffic tweets sentiment comparison",
-    legend: { position: "none" },
-    vAxis: {
-      title: "score",
-      // ticks: [-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]
-    },
-  };
-
-  var chart = new google.visualization.ColumnChart(
-    document.getElementById("aurinChart")
-  );
-  chart.draw(data, options);
 }
 
 webapp.init = function () {

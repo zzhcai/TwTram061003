@@ -36,10 +36,10 @@ html
       span(id="tooltiptext")
     div(id="map" style="width:32.5%; height:500px; display:inline-block")
     script(defer src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=webapp.init&v=weekly")
-    div(id="chart" style="display:none; width:32.5%; height:500px")
-    div(id='text' style='position:absolute; display:inline-block; width:25%; margin-left:5%; height:500px; background-color:cyan')
+    div(id="chart" style="display:none; width:50%; height:500px")
+    div(id='text' style='position:absolute; display:inline-block; width:25%; margin-left:5%; height:500px')
+      p(id='prompt') Click on an area to see tweets with max/min score in the area.
       p(id='area')
       p(id='maxT')
       p(id='minT')
     div(id='aurinMap' style="width:32.5%; height:500px; display:inline-block; margin-left:35%")
-    div(id='aurinChart' style="display:none; width:32.5%; height:500px; margin-left:35%")
