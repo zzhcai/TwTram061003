@@ -7,7 +7,7 @@ document
   .getElementById("designSelector")
   .addEventListener("change", () =>
     document.getElementById("topic").selectedOptions[0].value ===
-    "Geo-wise comparison"
+      "Geo-wise comparison"
       ? webapp.colourAreas()
       : drawChart()
   );
@@ -80,7 +80,7 @@ function onTopicChange() {
     document.getElementById("legend").style.visibility = "visible";
     document.getElementById("saSelector").style.display = "inline";
     document.getElementById("year").style.display = "inline";
-    webapp.init();
+    webapp.map_init();
   } else {
     document.getElementById("chart").style.display = "inline-block";
     document.getElementById("map").style.display = "none";
@@ -92,19 +92,6 @@ function onTopicChange() {
 }
 
 async function drawChart() {
-  //   var data = google.visualization.arrayToDataTable([
-  //     ["Year", "Visitations", { role: "style" }],
-  //     ["2010", 10, "color: gray"],
-  //     ["2020", 14, "color: #76A7FA"],
-  //     ["2030", 16, "opacity: 0.2"],
-  //     ["2040", 22, "stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF"],
-  //     [
-  //       "2050",
-  //       28,
-  //       "stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2",
-  //     ],
-  //   ]);
-
   webapp.design =
     document.getElementById("designSelector").selectedOptions[0].value;
   var data = google.visualization.arrayToDataTable([
@@ -177,6 +164,11 @@ async function drawChart() {
 }
 
 webapp.init = function () {
+  webapp.map_init();
+  webapp.aurin_init();
+}
+
+webapp.map_init = function () {
   const unimelb = { lat: -37.797702, lng: 144.961029 };
   webapp.map = new google.maps.Map(document.getElementById("map"), {
     zoom: 8,
@@ -184,7 +176,6 @@ webapp.init = function () {
   });
   webapp.map.data.setStyle({
     fillColor: "blue",
-    strokeOpacity: 0,
     strokeWeight: 1,
   });
   webapp.map.data.addListener("mouseover", function (event) {
@@ -221,25 +212,24 @@ webapp.init = function () {
   });
   webapp.show();
 };
-document.getElementById("saSelector").addEventListener("change", webapp.init);
 
-webapp.aurin_init = function () {
+webapp.aurin_init = async function () {
   const unimelb = { lat: -37.797702, lng: 144.961029 };
-  webapp.map = new google.maps.Map(document.getElementById("aurinMap"), {
+  webapp.aurinMap = new google.maps.Map(document.getElementById("aurinMap"), {
     zoom: 8,
     center: unimelb,
   });
-  webapp.map.data.setStyle({
+  webapp.aurinMap.data.setStyle({
     fillColor: "blue",
-    strokeOpacity: 0,
     strokeWeight: 1,
   });
-  webapp.map.data.addListener("mouseover", function (event) {
-    const prop = webapp.viewData[webapp.sa][webapp.design][webapp.view_avg];
+  await updateAurin();
+  webapp.aurinMap.data.addListener("mouseover", function (event) {
+    const prop = webapp.viewData[webapp.sa][webapp.aurin][webapp.column];
     let percent = -10;
     if (prop[getName(event.feature)]) {
       percent =
-        ((prop[getName(event.feature)].value - prop.valueMin) /
+        ((prop[getName(event.feature)] - prop.valueMin) /
           (prop.valueMax - prop.valueMin)) *
         100;
     }
@@ -249,41 +239,37 @@ webapp.aurin_init = function () {
     let pos = { x: event.domEvent.clientX, y: event.domEvent.clientY };
     let value;
     if (prop[getName(event.feature)]) {
-      value = prop[getName(event.feature)].value;
+      value = prop[getName(event.feature)];
     }
-    value = value ? ` (${value.toFixed(3)})` : "";
+    value = value ? ` (${value.toFixed(1)})` : "";
     showTooltip(getName(event.feature) + value, pos);
   });
-  webapp.map.data.addListener("mouseout", hideTooltip);
-  webapp.map.data.addListener("click", async function (event) {
-    let name = getName(event.feature);
-    if (name in webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max]) {
-      let maxT = await getHistTwitter(
-        webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_max][name]
-      );
-      let minT = await getHistTwitter(
-        webapp.viewData[webapp.sa][webapp.design][webapp.view_sa_min][name]
-      );
-      showTweets(name, maxT, minT);
-    }
-  });
-  webapp.show();
+  webapp.aurinMap.data.addListener("mouseout", hideTooltip);
+  webapp.aurinShow();
 };
+document.getElementById("saSelector").addEventListener("change", () => { webapp.map_init(); webapp.aurin_init() });
 
 webapp.show = function () {
   webapp.sa = document.getElementById("saSelector").selectedOptions[0].value;
-  webapp.showAreas();
+  webapp.showAreas(webapp.map);
   webapp.colourAreas();
 };
 
-webapp.showAreas = async function () {
+webapp.aurinShow = function () {
+  webapp.sa = document.getElementById("saSelector").selectedOptions[0].value;
+  webapp.showAreas(webapp.aurinMap);
+  webapp.colourAurin();
+};
+
+webapp.showAreas = async function (map) {
   await fetchGeoJSON();
-  webapp.features = webapp.map.data.addGeoJson(webapp.geoJSONData[webapp.sa], {
+  webapp.features = map.data.addGeoJson(webapp.geoJSONData[webapp.sa], {
     idPropertyName: "name",
   });
 };
 
 webapp.colourAreas = async function () {
+  showTweets2('', '');
   await fetchView();
   getHistExtremeID();
   webapp.map.data.setStyle(function (feature) {
@@ -314,6 +300,48 @@ webapp.colourAreas = async function () {
     };
   });
 };
+
+webapp.colourAurin = async function () {
+  webapp.aurin = document.getElementById('aurinSelector').selectedOptions[0].value;
+  webapp.column = document.getElementById('columnSelector').selectedOptions[0].value;
+  webapp.aurinMap.data.setStyle(function (feature) {
+    const name = getName(feature);
+    const prop = webapp.viewData[webapp.sa][webapp.aurin][webapp.column];
+    let opa = 0.2;
+    let color = "grey";
+    if (prop[name]) {
+      const low = [5, 69, 54]; // color of smallest datum
+      const high = [151, 83, 34]; // color of largest datum
+      // delta represents where the value sits between the min and max
+      const delta =
+        (prop[name] - prop.valueMin) / (prop.valueMax - prop.valueMin);
+      const hsl = [];
+
+      for (let i = 0; i < 3; i++) {
+        // calculate an integer color based on the delta
+        hsl.push((high[i] - low[i]) * delta + low[i]);
+      }
+      color = "hsl(" + hsl[0] + "," + hsl[1] + "%," + hsl[2] + "%)";
+      opa = 0.8;
+    }
+    return {
+      fillColor: color,
+      fillOpacity: opa,
+      strokeOpacity: 0.3,
+      strokeWeight: 1,
+    };
+  });
+  document.getElementById("aurinValueMin").textContent =
+    webapp.viewData[webapp.sa][webapp.aurin][webapp.column].valueMin.toLocaleString();
+  document.getElementById("aurinValueMax").textContent =
+    webapp.viewData[webapp.sa][webapp.aurin][webapp.column].valueMax.toLocaleString();
+};
+document.getElementById('aurinSelector').addEventListener('change', async () => {
+  await fetchAurin();
+  udpateColumn();
+  webapp.colourAurin()
+});
+document.getElementById('columnSelector').addEventListener('change', webapp.colourAurin);
 
 function getName(feature) {
   return feature.j.name;
@@ -359,7 +387,6 @@ async function fetchView() {
     k: r.key[r.key.length - 1],
     v: r.value.sum / r.value.count,
   }));
-  // data.sort((o1, o2) => o1.v - o2.v);
   webapp.viewData[webapp.sa] = webapp.viewData[webapp.sa] || {};
   webapp.viewData[webapp.sa][webapp.design] =
     webapp.viewData[webapp.sa][webapp.design] || {};
@@ -382,8 +409,69 @@ async function fetchView() {
     avg.valueMax.toLocaleString();
 }
 
-function getColor(rank) {
-  let green = rank * 255;
-  let red = 255 - green;
-  return `rgb(${red},${green},0)`;
+async function fetchAurin() {
+  webapp.aurin =
+    document.getElementById("aurinSelector").selectedOptions[0].value;
+  if (
+    webapp.viewData[webapp.sa] &&
+    webapp.viewData[webapp.sa][webapp.aurin]
+  ) {
+    return;
+  }
+  let data = await myFetch(
+    webapp.aurinDBURL(webapp.aurin)
+  );
+  data = data.rows.map((r) => r.doc.properties);
+  webapp.viewData[webapp.sa] = webapp.viewData[webapp.sa] || {};
+  webapp.viewData[webapp.sa][webapp.aurin] = {};
+  let avg = webapp.viewData[webapp.sa][webapp.aurin];
+  // (avg.valueMin = Number.MAX_VALUE), (avg.valueMax = -Number.MAX_VALUE);
+  for (var i in data[0]) {
+    if (i !== 'name') {
+      avg[i] = {};
+      avg[i].valueMin = Number.MAX_VALUE;
+      avg[i].valueMax = -Number.MAX_VALUE;
+    }
+  }
+  for (var i of data) {
+    for (var j in avg) {
+      if (i[j] === null) {
+        continue;
+      }
+      avg[j][i.name] = i[j];
+      if (i[j] < avg[j].valueMin) {
+        avg[j].valueMin = i[j];
+      }
+      if (i[j] > avg[j].valueMax) {
+        avg[j].valueMax = i[j];
+      }
+    }
+  }
+}
+
+async function updateAurin() {
+  let as = document.getElementById('aurinSelector');
+  while (as.length) {
+    as.remove(as[0]);
+  }
+  for (var i of webapp.aurindb[webapp.sa]) {
+    let opt = document.createElement("option");
+    opt.text = i;
+    as.add(opt);
+  }
+  await fetchAurin();
+  udpateColumn();
+}
+
+function udpateColumn() {
+  webapp.aurin = document.getElementById('aurinSelector').selectedOptions[0].value;
+  let cs = document.getElementById('columnSelector');
+  while (cs.length) {
+    cs.remove(cs[0]);
+  }
+  for (var i in webapp.viewData[webapp.sa][webapp.aurin]) {
+    let opt = document.createElement("option");
+    opt.text = i;
+    cs.add(opt);
+  }
 }
