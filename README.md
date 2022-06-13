@@ -77,6 +77,8 @@ More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 
 # Marks
 
+- 35/40 (87.5%)
+
 - The report contains a very thorough user-guide that is easy to follow. Additionally, the system architecture is explained in excellent detail. However, the report does not contain a discussion on the advantages and disadvantages of using MRC in the context of twitter data analysis conducted in this project (although some aspects of this discussion are present in various sections).
 
   You showed a good working demonstration of the deployment of your cloud-based solution via Ansible. The structure of the playbook is well-setup for a dynamic deployment, with very little hard-coded variables. It was good to see Docker used to setup a CouchDB cluster. However, it would have been nice to see an ability to provision added resources in the playbook in order to enable dynamic horizontal scaling.
