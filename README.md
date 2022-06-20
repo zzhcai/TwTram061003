@@ -77,7 +77,7 @@ More `README.md` can be found in `ansible/`, `harvester/`, and `webapp/`.
 
 # Marks
 
-- 35/40 (87.5%)
+- 35/40 (87.5%), after weighing each individual's contribution
 
 - The report contains a very thorough user-guide that is easy to follow. Additionally, the system architecture is explained in excellent detail. However, the report does not contain a discussion on the advantages and disadvantages of using MRC in the context of twitter data analysis conducted in this project (although some aspects of this discussion are present in various sections).
 
